@@ -4,16 +4,18 @@
 #          http://www.boost.org/LICENSE_1_0.txt)
 
 cmake_minimum_required(VERSION 3.3)
-project(pusher++_super CXX)
+project(pusher++ CXX)
 
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(tz date/tz.cpp)
-target_include_directories(tz INTERFACE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
-target_compile_features(tz PUBLIC
-    cxx_lambda_init_captures # forces C++14
-)
+set(BEAST_GIT_TAG 797631c) # 1.0.0-b24
+set(CRYPTOPP_GIT_TAG CRYPTOPP_5_6_5)
+set(DATE_GIT_TAG 2.1.0)
+set(RAPIDJSON_GIT_TAG v1.1.0)
 
+add_subdirectory(cryptopp)
+add_subdirectory(date)
+add_subdirectory(rapidjson)
+add_subdirectory(Beast)
 add_subdirectory(pusher++)
