@@ -12,7 +12,7 @@
 
 ## Introduction
 
-Pusher++ is a header-only cross-platform C++ library for connecting to [Pusher](pusher.com). It's built on top of Boost.Asio via Beast for HTTP and Websocket support.
+Pusher++ is a header-only cross-platform C++ library for connecting to [Pusher](https://pusher.com). It's built on top of Boost.Asio via Beast for HTTP and Websocket support.
 
 ## Features
 
@@ -100,4 +100,4 @@ Distributed under the Boost Software License, Version 1.0. (See accompanying fil
 ## Contact
 
 Please report issues or questions here:
-https://github.com/BenPope/pusher++/issues
+https://github.com/BenPope/pusher-cpp/issues
