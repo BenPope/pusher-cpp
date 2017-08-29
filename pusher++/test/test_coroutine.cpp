@@ -39,7 +39,7 @@ BOOST_AUTO_TEST_CASE(test_coroutine_tx_and_rx)
 
         auto response = server.trigger("test_channel", "test_name", tx_message, yield[ec]);
         BOOST_REQUIRE_EQUAL(ec, boost::system::errc::success);
-        BOOST_REQUIRE_EQUAL(response.status, 200);
+        BOOST_REQUIRE_EQUAL(response.result(), boost::beast::http::status::ok);
 
         server.disconnect();
     });

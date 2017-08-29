@@ -6,7 +6,6 @@
 #ifndef PUSHERPP_DETAIL_CLIENT_WRITE_HPP
 #define PUSHERPP_DETAIL_CLIENT_WRITE_HPP
 
-#include <beast/core/to_string.hpp>
 #include <rapidjson/writer.h>
 #include <string>
 

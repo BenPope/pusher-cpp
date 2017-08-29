@@ -6,14 +6,14 @@
 #ifndef PUSHERPP_CLIENT_HPP
 #define PUSHERPP_CLIENT_HPP
 
-#include <beast/core/to_string.hpp>
-#include <beast/websocket.hpp>
 #include <boost/asio/async_result.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/handler_type.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/beast/core/flat_buffer.hpp>
+#include <boost/beast/websocket.hpp>
 #include <iostream>
 #include <string>
 #include <map>
@@ -30,12 +30,11 @@ namespace pusher
     class client
     {
         using signal_filter = detail::client::signal_filter<std::string(*)(event const&)>;
-        beast::websocket::stream<SocketT> socket_;
+        boost::beast::websocket::stream<SocketT> socket_;
         boost::asio::ip::tcp::resolver resolver_;
         std::string host_;
         std::string handshake_resource_;
-        beast::streambuf read_buf_;
-        beast::websocket::opcode read_op_;
+        boost::beast::flat_buffer read_buf_;
         detail::client::signal events_;
         signal_filter filtered_channels_;
         std::map<std::string, signal_filter> channels_;
@@ -94,7 +93,6 @@ namespace pusher
             initialise();
 
             boost::asio::connect(socket_.next_layer(), resolver_.resolve(boost::asio::ip::tcp::resolver::query{host_, "80"}));
-            socket_.set_option(beast::websocket::keep_alive(true));
             socket_.handshake(host_, handshake_resource_);
 
             read_impl();
@@ -103,7 +101,7 @@ namespace pusher
         void disconnect()
         {
             resolver_.cancel();
-            socket_.close(beast::websocket::close_code::normal);
+            socket_.close(boost::beast::websocket::close_code::normal);
         }
 
         auto channel(std::string const& name)
@@ -141,12 +139,13 @@ namespace pusher
 
         void read_impl()
         {
-            return socket_.async_read(read_op_, read_buf_, [this](auto ec)
+            return socket_.async_read(read_buf_, [this](auto ec, std::size_t bytes_written)
             {
                 if(ec)
                     return;
 
-                events_(detail::client::make_event(detail::client::consume_string(read_buf_)));
+                events_(detail::client::make_event(read_buf_));
+                read_buf_.consume(read_buf_.size());
 
                 this->read_impl();
             });

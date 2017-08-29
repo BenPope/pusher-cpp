@@ -10,7 +10,7 @@
 #include <rapidjson/document.h>
 #include <rapidjson/writer.h>
 #include <sstream>
-#include <beast/http.hpp>
+#include <boost/beast/http.hpp>
 
 namespace pusher { namespace detail { namespace server
 {
@@ -47,14 +47,12 @@ namespace pusher { namespace detail { namespace server
 
     inline auto make_request(std::string const& host_and_port, std::string url, std::string body)
     {
-        beast::http::request<beast::http::string_body> req;
-        req.method = "POST";
-        req.version = 11;
-        req.url = std::move(url);
-        req.body = std::move(body);
-        req.fields.replace("Host", host_and_port);
-        req.fields.replace("Content-Type", "application/json");
-        beast::http::prepare(req);
+        namespace http = boost::beast::http;
+        http::request<http::string_body> req{http::verb::post, url, 11};
+        req.set(http::field::host, host_and_port);
+        req.set(http::field::content_type, "application/json");
+        req.body = body;
+        req.prepare_payload();
         return req;
     }
 

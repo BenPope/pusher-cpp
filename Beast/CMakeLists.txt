@@ -6,7 +6,7 @@
 include(DownloadProject)
 download_project(
     PROJ                 Beast
-    GIT_REPOSITORY       https://github.com/vinniefalco/Beast.git
+    GIT_REPOSITORY       https://github.com/boostorg/beast.git
     GIT_TAG              ${BEAST_GIT_TAG}
     UPDATE_DISCONNECTED  1
     SOURCE_DIR           ${CMAKE_CURRENT_SOURCE_DIR}/Beast

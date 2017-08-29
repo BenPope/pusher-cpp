@@ -9,12 +9,13 @@
 #include "event.hpp"
 #include "detail/server/write.hpp"
 
-#include <beast/http.hpp>
 #include <boost/asio/async_result.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/handler_type.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/beast/core/flat_buffer.hpp>
+#include <boost/beast/http.hpp>
 #include <boost/core/swap.hpp>
 #include <string>
 
@@ -23,8 +24,8 @@ namespace pusher
     template<typename SocketT>
     class server
     {
-        using request = beast::http::request<beast::http::string_body>;
-        using response = beast::http::response<beast::http::streambuf_body>;
+        using request = boost::beast::http::request<boost::beast::http::string_body>;
+        using response = boost::beast::http::response<boost::beast::http::dynamic_body>;
 
         template<typename Handler, typename Signature>
         using handler_type_t = typename boost::asio::handler_type<Handler, Signature>::type;
@@ -37,7 +38,7 @@ namespace pusher
         std::string host_;
         request request_;
         response response_;
-        beast::streambuf response_buf_;
+        boost::beast::flat_buffer response_buf_;
 
     public:
         server(boost::asio::io_service& ios, std::string app_id, std::string key, std::string secret, std::string cluster = "mt1")
@@ -88,15 +89,15 @@ namespace pusher
             auto url = detail::server::make_url(app_id_, key_, secret_, body);
             auto host_and_port = host_ + ":" + std::to_string(socket_.remote_endpoint().port());
             request_ = detail::server::make_request(host_and_port, url, body);
-
-            beast::http::async_write(socket_, request_, [this, handler](auto ec) mutable
+            
+            boost::beast::http::async_write(socket_, request_, [this, handler](auto ec) mutable
             {
                 if(ec)
-                    return handler(ec, beast::http::response<beast::http::streambuf_body>{});
+                    return handler(ec, response{});
 
-                beast::http::async_read(socket_, response_buf_, response_, [this, handler](auto ec) mutable
+                boost::beast::http::async_read(socket_, response_buf_, response_, [this, handler](auto ec) mutable
                 {
-                    beast::http::response<beast::http::streambuf_body> res;
+                    response res;
                     boost::swap(res, response_);
                     return handler(ec, res);
                 });
@@ -111,9 +112,9 @@ namespace pusher
             auto host_and_port = host_ + ":" + std::to_string(socket_.remote_endpoint().port());
             request_ = detail::server::make_request(host_and_port, url, body);
 
-            beast::http::write(socket_, request_);
-            beast::http::read(socket_, response_buf_, response_);
-            beast::http::response<beast::http::streambuf_body> res;
+            boost::beast::http::write(socket_, request_);
+            boost::beast::http::read(socket_, response_buf_, response_);
+            response res;
             boost::swap(res, response_);
             return res;
         }
