@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
  * C++14
  * [Beast](https://boostorg/beast) >= 110
  * [Boost](http://www.boost.org) >= 1.63
- * [RapidJSON](https://github.com/miloyip/rapidjson/) >= v1.1.v0
+ * [RapidJSON](https://github.com/miloyip/rapidjson/) >= v1.1.0
  * [Crypto++](https://github.com/weidai11/cryptopp) >= 5.6.5 (server)
  * [OpenSSL](https://www.openssl.org/) = 1.0.2 (optional)
 
