@@ -81,10 +81,10 @@ int main(int argc, char* argv[])
 ## Requirements
 
  * C++14
- * [Beast](https://github.com/vinniefalco/Beast) >= b23
- * [Boost](http://www.boost.org) >= 1.58
- * [RapidJSON](https://github.com/miloyip/rapidjson/) >= 1.1.0
- * [Crypto++](https://github.com/weidai11/cryptopp) >= 5.6 (server)
+ * [Beast](https://boostorg/beast) >= 110
+ * [Boost](http://www.boost.org) >= 1.63
+ * [RapidJSON](https://github.com/miloyip/rapidjson/) >= v1.1.v0
+ * [Crypto++](https://github.com/weidai11/cryptopp) >= 5.6.5 (server)
  * [OpenSSL](https://www.openssl.org/) = 1.0.2 (optional)
 
 ## Status
