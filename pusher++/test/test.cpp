@@ -43,7 +43,7 @@ namespace
             ("app_id", po::value<std::string>(), "Application ID")
             ("key", po::value<std::string>(), "Key")
             ("secret", po::value<std::string>(), "Secret")
-            ("cluster", po::value<std::string>()->default_value("eu"), "Cluster [mt1|ap1|eu]")
+            ("cluster", po::value<std::string>()->default_value("eu"), "Cluster: [ap1|ap2|eu|us2]mt1]")
         ;
         po::variables_map vm;
         po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
@@ -61,6 +61,6 @@ namespace
 
 int main(int argc, char* argv[])
 {
-    options = parse_options(argc, argv);
+    options = parse_options(argc - 1, argv + 1);
     return boost::unit_test::unit_test_main(init_unit_test, argc, argv);
 }

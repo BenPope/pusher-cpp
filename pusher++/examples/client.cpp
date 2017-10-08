@@ -14,9 +14,11 @@ namespace
     {
         boost::program_options::options_description desc{"Options"};
         desc.add_options()
-            ("key", boost::program_options::value<std::string>(), "Key")
-            ("cluster", boost::program_options::value<std::string>()->default_value("eu"), "Cluster")
-        ;
+            ("key", boost::program_options::value<std::string>(), "Application Key")
+            ("cluster", boost::program_options::value<std::string>()->default_value("mt1"), "Cluster: [ap1|ap2|eu|us2]mt1]")
+            ("channel", boost::program_options::value<std::string>()->default_value("my-channel"), "Channel to subscribe to")
+            ("event", boost::program_options::value<std::string>()->default_value("my-event"), "Event to subscribe to")
+            ;
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
         boost::program_options::notify(vm);
@@ -51,14 +53,16 @@ int main(int argc, char* argv[])
 
     auto const key = options["key"].as<std::string>();
     auto const cluster = options["cluster"].as<std::string>();
-
+    auto const channel_name = options["channel"].as<std::string>();
+    auto const event_name = options["event"].as<std::string>();
+    
     boost::asio::io_service ios;
     pusher::client<boost::asio::ip::tcp::socket> client{ios, key, cluster};
     client.connect();
     client.bind_all(logger);
 
-    auto test_channel = client.channel("test_channel");
-    test_channel.bind("test_name", [&client](pusher::event const& event)
+    auto channel = client.channel(channel_name);
+    channel.bind(event_name, [&client](pusher::event const& event)
     {
         if(event.data == "bye")
             client.disconnect();

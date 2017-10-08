@@ -14,9 +14,11 @@ namespace
         boost::program_options::options_description desc{"Options"};
         desc.add_options()
             ("app_id", boost::program_options::value<std::string>(), "Application ID")
-            ("key", boost::program_options::value<std::string>(), "Key")
+            ("key", boost::program_options::value<std::string>(), "Application Key")
             ("secret", boost::program_options::value<std::string>(), "Secret")
-            ("cluster", boost::program_options::value<std::string>()->default_value("eu"), "Cluster [mt1|ap1|eu]")
+            ("cluster", boost::program_options::value<std::string>()->default_value("mt1"), "Cluster: [ap1|ap2|eu|us2]mt1]")
+            ("channel", boost::program_options::value<std::string>()->default_value("my-channel"), "Channel to publish to")
+            ("event", boost::program_options::value<std::string>()->default_value("my-event"), "Event to publish to")
         ;
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
@@ -40,6 +42,8 @@ int main(int argc, char* argv[])
     auto const secret = options["secret"].as<std::string>();
     auto const key = options["key"].as<std::string>();
     auto const cluster = options["cluster"].as<std::string>();
+    auto const channel_name = options["channel"].as<std::string>();
+    auto const event_name = options["event"].as<std::string>();
 
     boost::asio::io_service ios;
     pusher::server<boost::asio::ip::tcp::socket> server{ios, app_id, key, secret, cluster};
@@ -48,7 +52,7 @@ int main(int argc, char* argv[])
     std::string input;
     while(input != "bye" && std::cout << "\nMessage: " && std::getline(std::cin, input))
     {
-        std::cout << server.trigger("test_channel", "test_name", input);
+        std::cout << server.trigger(channel_name, event_name, input);
     }
     std::cout << '\n';
     ios.run();

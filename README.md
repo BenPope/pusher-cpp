@@ -12,16 +12,17 @@
 
 ## Introduction
 
-Pusher++ is a header-only cross-platform C++ library for connecting to [Pusher](https://pusher.com). It's built on top of Boost.Asio via Beast for HTTP and Websocket support.
+Pusher++ is a header-only cross-platform C++ library for connecting to [Pusher](https://pusher.com). It's built on top of Boost.Asio via Boost.Beast for HTTP and Websocket support.
 
 ## Features
 
  * **Performance.** Supports both synchronous and asynchronous APIs.
  * **SSL support.** Connect securely to endpoints at Pusher and bypass problematic proxies.
+ * **Symmetric API** Client and Server share the same API.
 
 ## Usage
 
-These examples are complete, but you will have to set your application specific credentials. The `examples` directory contains examples that parse the command line.
+These examples are complete, but you will have to set your application specific credentials. The [examples](pusher++/examples) directory contains examples that parse the command line.
 
 Example Server:
 
@@ -86,6 +87,16 @@ int main(int argc, char* argv[])
  * [RapidJSON](https://github.com/miloyip/rapidjson/) >= v1.1.0
  * [Crypto++](https://github.com/weidai11/cryptopp) >= 5.6.5 (server)
  * [OpenSSL](https://www.openssl.org/) = 1.0.2 (optional)
+
+## Build
+
+This is a header only library, no building is required.
+
+However, a cmake build system is in place for tests and examples.  Currently, it is assumed that the environment is the environment is linux-ish and that Boost and OpenSSL headers are installed; other dependencies are managed by cmake.  Building on Windows should work, but is untested and will likely require some minor changes to find Boost and OpenSSL.
+
+```
+mkdir -p build && cd build && cmake .. && make -j
+```
 
 ## Status
 
