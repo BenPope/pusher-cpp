@@ -11,12 +11,30 @@
 #include <boost/beast/core/string.hpp>
 #include <rapidjson/document.h>
 #include <rapidjson/reader.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 #include <string>
 
 #include <pusher++/event.hpp>
 
 namespace pusher { namespace detail { namespace client
 {
+    template<typename ValueT>
+    std::string stringify(ValueT const& value)
+    {
+        if (value.IsString())
+            return value.GetString();
+
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        if(!value.Accept(writer))
+            return std::string();
+
+        auto begin = buffer.GetString();
+        auto size = buffer.GetSize();
+        return std::string(begin, size);
+    }
+
     inline event make_event(boost::beast::flat_buffer const& buf)
     {
         rapidjson::Document d;
@@ -28,7 +46,7 @@ namespace pusher { namespace detail { namespace client
         if(d.HasMember("event"))
             ev.name = d["event"].GetString();
         if(d.HasMember("data"))
-            ev.data = d["data"].GetString();
+            ev.data = stringify(d["data"]);
         ev.timestamp = detail::clock::now();
         return ev;
     }
