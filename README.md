@@ -82,7 +82,7 @@ int main(int argc, char* argv[])
 ## Requirements
 
  * C++14
- * [Beast](https://boostorg/beast) >= 110
+ * [Beast](https://boostorg/beast) >= 121
  * [Boost](http://www.boost.org) >= 1.63
  * [RapidJSON](https://github.com/miloyip/rapidjson/) >= v1.1.0
  * [Crypto++](https://github.com/weidai11/cryptopp) >= 5.6.5 (server)

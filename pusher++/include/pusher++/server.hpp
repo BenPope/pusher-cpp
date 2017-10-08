@@ -90,12 +90,12 @@ namespace pusher
             auto host_and_port = host_ + ":" + std::to_string(socket_.remote_endpoint().port());
             request_ = detail::server::make_request(host_and_port, url, body);
             
-            boost::beast::http::async_write(socket_, request_, [this, handler](auto ec) mutable
+            boost::beast::http::async_write(socket_, request_, [this, handler](auto ec, size_t) mutable
             {
                 if(ec)
                     return handler(ec, response{});
 
-                boost::beast::http::async_read(socket_, response_buf_, response_, [this, handler](auto ec) mutable
+                boost::beast::http::async_read(socket_, response_buf_, response_, [this, handler](auto ec, size_t) mutable
                 {
                     response res;
                     boost::swap(res, response_);

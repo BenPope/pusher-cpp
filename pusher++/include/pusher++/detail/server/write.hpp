@@ -51,7 +51,7 @@ namespace pusher { namespace detail { namespace server
         http::request<http::string_body> req{http::verb::post, url, 11};
         req.set(http::field::host, host_and_port);
         req.set(http::field::content_type, "application/json");
-        req.body = body;
+        req.body() = body;
         req.prepare_payload();
         return req;
     }
