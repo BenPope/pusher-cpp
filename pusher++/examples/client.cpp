@@ -15,7 +15,7 @@ namespace
         boost::program_options::options_description desc{"Options"};
         desc.add_options()
             ("key", boost::program_options::value<std::string>(), "Application Key")
-            ("cluster", boost::program_options::value<std::string>()->default_value("mt1"), "Cluster: [ap1|ap2|eu|us2]mt1]")
+            ("cluster", boost::program_options::value<std::string>()->default_value("mt1"), "Cluster: [ap1|ap2|eu|us2|mt1]")
             ("channel", boost::program_options::value<std::string>()->default_value("my-channel"), "Channel to subscribe to")
             ("event", boost::program_options::value<std::string>()->default_value("my-event"), "Event to subscribe to")
             ;
